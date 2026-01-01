@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from datetime import date
 from typing import Any, Dict
 
 @dataclass(frozen=True)
@@ -33,6 +34,8 @@ class EFSeedItem:
     region: str | None = None
 
     def as_dict(self) -> dict:
+        valid_from = date.fromisoformat(self.valid_from) if self.valid_from else None
+        valid_to = date.fromisoformat(self.valid_to) if self.valid_to else None
         return {
             "key": self.key,
             "name": self.name,
@@ -47,8 +50,8 @@ class EFSeedItem:
             "gwp_version": self.gwp_version,
             "publisher": self.publisher,
             "document_title": self.document_title,
-            "valid_from": self.valid_from,
-            "valid_to": self.valid_to,
+            "valid_from": valid_from,
+            "valid_to": valid_to,
             "region": self.region,
             "meta": {
                 "source": self.meta.source,

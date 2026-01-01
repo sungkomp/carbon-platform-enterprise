@@ -1,7 +1,16 @@
 from __future__ import annotations
 from datetime import datetime, date
-from sqlalchemy import String, Float, Integer, DateTime, Boolean, Text, Date, ForeignKey
-from sqlalchemy.dialects.postgresql import JSONB, ARRAY
+from sqlalchemy import (
+    Boolean,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 from .db import Base
 
@@ -17,7 +26,7 @@ class EmissionFactor(Base):
 
     scope: Mapped[str] = mapped_column(String, default="N/A")
     category: Mapped[str] = mapped_column(String, default="Unclassified")
-    tags: Mapped[list[str]] = mapped_column(ARRAY(String), default=list)
+    tags: Mapped[list[str]] = mapped_column(JSON, default=list)
 
     region: Mapped[str | None] = mapped_column(String, nullable=True)
     country: Mapped[str | None] = mapped_column(String, nullable=True)
@@ -47,13 +56,13 @@ class EmissionFactor(Base):
     uncertainty_value: Mapped[float | None] = mapped_column(Float, nullable=True)  # 0.1=10%
     uncertainty_type: Mapped[str | None] = mapped_column(String, nullable=True)
 
-    gas_breakdown: Mapped[dict] = mapped_column(JSONB, default=dict)
-    activity_id_fields: Mapped[dict] = mapped_column(JSONB, default=dict)
-    data_quality: Mapped[dict] = mapped_column(JSONB, default=dict)
-    meta: Mapped[dict] = mapped_column(JSONB, default=dict)
+    gas_breakdown: Mapped[dict] = mapped_column(JSON, default=dict)
+    activity_id_fields: Mapped[dict] = mapped_column(JSON, default=dict)
+    data_quality: Mapped[dict] = mapped_column(JSON, default=dict)
+    meta: Mapped[dict] = mapped_column(JSON, default=dict)
 
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    extra: Mapped[dict] = mapped_column(JSONB, default=dict)
+    extra: Mapped[dict] = mapped_column(JSON, default=dict)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
 class Activity(Base):
@@ -64,7 +73,7 @@ class Activity(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     ef_key: Mapped[str] = mapped_column(String, nullable=False)
 
-    inputs: Mapped[dict] = mapped_column(JSONB, default=dict)
+    inputs: Mapped[dict] = mapped_column(JSON, default=dict)
     scope: Mapped[str] = mapped_column(String, default="Scope3")
     lifecycle_stage: Mapped[str | None] = mapped_column(String, nullable=True)
     period: Mapped[str | None] = mapped_column(String, nullable=True)
@@ -80,8 +89,8 @@ class CalculationRun(Base):
     total_kgco2e: Mapped[float] = mapped_column(Float, default=0.0)
     total_tco2e: Mapped[float] = mapped_column(Float, default=0.0)
 
-    details: Mapped[dict] = mapped_column(JSONB, default=dict)
-    ef_snapshot: Mapped[dict] = mapped_column(JSONB, default=dict)  # {ef_key: payload_hash}
+    details: Mapped[dict] = mapped_column(JSON, default=dict)
+    ef_snapshot: Mapped[dict] = mapped_column(JSON, default=dict)  # {ef_key: payload_hash}
 
     review_status: Mapped[str] = mapped_column(String, default="DRAFT")  # DRAFT/REVIEWED/APPROVED
     reviewed_by: Mapped[str | None] = mapped_column(String, nullable=True)
@@ -107,5 +116,5 @@ class CarbonCreditProject(Base):
     buffer_pct: Mapped[float] = mapped_column(Float, default=0.0)
     vintage: Mapped[str] = mapped_column(String, default="2025")
 
-    extra: Mapped[dict] = mapped_column(JSONB, default=dict)
+    extra: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
