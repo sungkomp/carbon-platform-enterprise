@@ -26,3 +26,6 @@ Same steps as before (git init/add/commit/push).
 
 ## Production note
 For true production: replace `create_all()` with Alembic migrations and manage secrets (JWT key, signing keys, DB creds).
+- For a quick ChatGPT-ready demo of the workflow without the web UI, run
+  `PYTHONPATH=backend python backend/scripts/chatgpt_demo.py` (see
+  `docs/chatgpt-demo.md`).
