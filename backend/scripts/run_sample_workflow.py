@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 import os
+from math import isclose
 from pathlib import Path
 
-import pytest
 from starlette.requests import Request
 
 
@@ -63,8 +63,8 @@ def run_workflow(db_path: Path | None = None, recreate: bool = True):
         dashboard = app_main.dashboard(request, db=session, user=admin)
 
     assert run_res["ok"] is True
-    assert run_res["total_kgco2e"] == pytest.approx(10.0)
-    assert run_res["total_tco2e"] == pytest.approx(0.01)
+    assert isclose(run_res["total_kgco2e"], 10.0, rel_tol=1e-9, abs_tol=1e-12)
+    assert isclose(run_res["total_tco2e"], 0.01, rel_tol=1e-9, abs_tol=1e-12)
     assert dashboard["counts"]["activities"] == 1
     assert dashboard["counts"]["runs"] == 1
 
